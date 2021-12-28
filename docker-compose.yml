@@ -1,0 +1,38 @@
+version: '3.7'
+services:
+    db:
+        image: postgres
+        container_name: ep-db
+        environment:
+            - POSTGRES_PORT=${DB_PORT}
+            - POSTGRES_USER=${DB_USERNAME}  
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+            - POSTGRES_DB=${DB_NAME}
+            - DATABASE_HOST=${DB_HOST}
+            
+        ports:
+            - '5432:5432'
+        volumes:
+            - ./db:/var/lib/postgresql/data
+        networks:
+            - internal
+    server:
+        container_name: ep-server
+        build:
+            dockerfile: Dockerfile
+        command: bash -c "go build && ./ -b 0.0.0.0:8080 --timeout 120"
+        volumes:
+            - './server:/app/server'
+        expose:
+            - 8080
+        depends_on: 
+            - db
+        networks:
+            - internal
+        stdin_open: true
+volumes:
+    db:  
+    server:
+networks:
+    internal:
+      driver: bridge
