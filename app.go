@@ -31,7 +31,7 @@ func main() {
 	dsn := "postgres://postgres:@fullstack-postgres:5432/fullstack_api?user=ross&password=password&sslmode=disable"
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	db := bun.NewDB(sqldb, pgdialect.New())
-	table := db.NewCreateTable().Model((*User)(nil))
+	table := db.NewCreateTable().Model((*User)(nil)).Table("Users").IfNotExists()
 	fmt.Println(table)
 	fmt.Printf("Listening for requests on port: %v\n", PORT)
 	log.Fatal(http.ListenAndServe(":"+PORT, nil))
