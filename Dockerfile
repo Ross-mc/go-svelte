@@ -20,3 +20,4 @@ HEALTHCHECK CMD curl -f http://localhost:443/health || exit 1
 
 # Command to run the executable
 CMD ["./main"]
+#
